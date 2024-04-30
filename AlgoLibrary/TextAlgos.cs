@@ -69,24 +69,6 @@ namespace AlgoLibrary
             return sum__KV_VK < sum_KK_VV;
         }
 
-        public static KeyValuePair<string, string> LowestSumDistance(List<KeyValuePair<string, string>> kvList, KeyValuePair<string, string> kv)
-        {
-            KeyValuePair<string, string> lowest = kvList[0];
-            int lowestSum = LevenshteinDistance(kv.Key, kvList[0].Key) + LevenshteinDistance(kv.Value, kvList[0].Value);
-
-            foreach (var kv2 in kvList)
-            {
-                int sum = LevenshteinDistance(kv.Key, kv2.Key) + LevenshteinDistance(kv.Value, kv2.Value);
-                if (sum < lowestSum)
-                {
-                    lowest = kv2;
-                    lowestSum = sum;
-                }
-            }
-
-            return lowest;
-        }
-
         private static Regex regexDateSpaceTime = new Regex(@"^(\d+)\/(\d+).{1,3}(\d{1,2}):(\d\d)$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches 30/04 - 19:00
 
         private static Regex regexTimeToday = new Regex(@"^(\d{1,2}):(\d\d)$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches 19:00
