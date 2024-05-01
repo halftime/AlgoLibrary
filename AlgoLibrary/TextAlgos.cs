@@ -81,7 +81,7 @@ namespace AlgoLibrary
 
         /// <summary>
         /// Returns a DateOnly object from a string
-        /// Best attempt to fetch date from a string in NL or EN
+        /// Best attempt to fetch nearby date from string in NL or EN
         /// Default: returns todays DateOnly
         /// </summary>
         /// <param name="date_str"></param>
