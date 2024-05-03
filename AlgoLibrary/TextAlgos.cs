@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AlgoLibrary
 {
@@ -41,32 +43,49 @@ namespace AlgoLibrary
         }
 
         /// <summary>
-        /// return (bool) true if KeyValue-pairs match better when swapped
-        /// : Key1 =~ Value2 and Key2 =~ Value1
+        /// Returns KV<int, string> with the best (lowest levenshtein) match from list of candidates
+        /// 0 : perfect match
+        /// null : no match (no candidates)
         /// </summary>
-        /// <param name="kv">First str KeyValue pair</param>
-        /// <param name="kv2">Second str KeyValue pair</param>
-        /// <returns></returns>
-        public static bool KV_IsSwapped(KeyValuePair<string, string> kv, KeyValuePair<string, string> kv2) // 
+        public static KeyValuePair<int, string>? GetBestMatch(string input, List<string> candidates)
         {
-            int distance_KK = LevenshteinDistance(kv.Key, kv2.Key); // smaller = better match, 0 = perfect match
-            int distance_VV = LevenshteinDistance(kv.Value, kv2.Value);
-            int sum_KK_VV = distance_KK + distance_VV;
+            int minDistance = int.MaxValue;
+            string? bestMatch = null;
+            foreach (var candidate in candidates)
+            {
+                if (candidate == null || candidate.Length == 0) continue;
+                int distance = LevenshteinDistance(input, candidate);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    bestMatch = candidate;
+                }
+            }
+            if (bestMatch == null) return null;
+            return new KeyValuePair<int, string>(minDistance, bestMatch);
+        }
 
-            // __swapped
-            int distance__KV = LevenshteinDistance(kv.Key, kv2.Value);
-            int distance__VK = LevenshteinDistance(kv.Value, kv2.Key);
-            int sum__KV_VK = distance__KV + distance__VK;
-
-            Console.WriteLine($"Distance between: {kv.Key} and {kv2.Key} is {distance_KK}");
-            Console.WriteLine($"Distance between: {kv.Value} and {kv2.Value} is {distance_VV}");
-
-            Console.WriteLine($"(Swapped) Distance between: {kv.Key} and {kv2.Value} is {distance__KV}");
-            Console.WriteLine($"(Swapped) Distance between: {kv.Value} and {kv2.Key} is {distance__VK}");
-
-            Console.WriteLine($"Sum straight: {sum_KK_VV} \t swapped: {sum__KV_VK}");
-
-            return sum__KV_VK < sum_KK_VV;
+        /// <summary>
+        /// Returns "clean" unicode, lowercase string
+        /// Replaces special characters with their base character
+        /// Removes double spaces, ., ' - _ / and trims
+        /// </summary>
+        public static string CleanString(string stIn)
+        {
+            stIn = stIn.ToLower().Replace("-", " ").Replace("/", " ").Replace("_", " ").Replace(".", "").Replace(",", "").Replace("'", "").Replace("   ", " ").Replace("  ", " ").Trim();
+            string stFormD = stIn.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+            for (int ich = 0; ich < stFormD.Length; ich++)
+            {
+                if (stFormD[ich] == 'ø' || stFormD[ich] == 'ó') { sb.Append("o"); continue; }
+                if (stFormD[ich] == 'è' || stFormD[ich] == 'é') { sb.Append("e"); continue; }
+                if (stFormD[ich] == 'í') { sb.Append("i"); continue; }
+                if (stFormD[ich] == 'ç') { sb.Append("c"); continue; }
+                if (stFormD[ich] == 'â') { sb.Append("a"); continue; }
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+                if (uc != UnicodeCategory.NonSpacingMark) sb.Append(stFormD[ich]);
+            }
+            return (sb.ToString().Normalize(NormalizationForm.FormC).Trim());
         }
 
         private static Regex regexDateSpaceTime = new Regex(@"^(\d+)\/(\d+).{1,3}(\d{1,2}):(\d\d)$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches 30/04 - 19:00
