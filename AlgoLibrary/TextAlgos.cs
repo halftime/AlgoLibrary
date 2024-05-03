@@ -229,5 +229,17 @@ namespace AlgoLibrary
                 return new DateOnly(today.Year, today.Month, today.Day);
             }
         }
+
+        private static Regex regexWomenFB = new Regex(@"(women|\(D\)|\(W\)|(\[W\]))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        /// <summary>
+        /// Normalise female (football) team name & lowercase
+        /// output: fc xx [w]
+        /// </summary>
+        /// <param name="teamName">eg FC XX Women (W) [W]</param>
+        /// <returns></returns>
+        public static string NormalizeWomenFB(string teamName)
+        {
+            return regexWomenFB.Replace(teamName, "[w]").Trim().ToLower();
+        }
     }
 }
