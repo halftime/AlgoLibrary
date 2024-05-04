@@ -249,16 +249,49 @@ namespace AlgoLibrary
             }
         }
 
-        private static Regex regexWomenFB = new Regex(@"(women|\(D\)|\(W\)|(\[W\]))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        /// <summary>
-        /// Normalise female (football) team name & lowercase
-        /// output: fc xx [w]
-        /// </summary>
-        /// <param name="teamName">eg FC XX Women (W) [W]</param>
-        /// <returns></returns>
-        public static string NormalizeWomenFB(string teamName)
+        public static class TeamNames
         {
-            return regexWomenFB.Replace(teamName, "[w]").Trim().ToLower();
+            private static Regex regexYouthFB = new Regex(@"^(jong|jeugd|youth)|(?:(?:(?:U|O)+(19|21|23))|(B|reserves))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            private static Regex regexWomenFB = new Regex(@"(women|\(D\)|\(W\)|(\[W\]))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            /// <summary>
+            /// Normalise female (football) team name & lowercase
+            /// output: fc xx [w]
+            /// </summary>
+            /// <param name="teamName">eg FC XX Women (W) [W]</param>
+            /// <returns></returns>
+            public static string NormalizeWomenFB(string teamName)
+            {
+                return regexWomenFB.Replace(teamName, "[w]").Trim().ToLower();
+            }
+
+            /// <summary>
+            /// Normalise youth (football) team name & lowercase
+            /// input: FC XX U19,U21,U23, youth XX, XX reserves, etc.
+            /// output : fc uxx or fc II
+            /// </summary>
+            /// <param name="youthClass">out int eg: 19, 21, 23</param>
+            /// <param name="teamName">eg fc XX U19</param>
+            public static string NormalizeYouthFB(string teamName, out int? youthClass)
+            {
+                youthClass = null;
+                Match reYouthMatch = regexYouthFB.Match(teamName);
+
+                if (reYouthMatch.Groups[2].Success)
+                {
+                    youthClass = int.Parse(reYouthMatch.Groups[2].Value);
+                    return regexYouthFB.Replace(teamName, "").Trim().ToLower() + " u" + youthClass.ToString();
+                }
+                else if (reYouthMatch.Groups[1].Success || reYouthMatch.Groups[3].Success)
+                {
+                    return regexYouthFB.Replace(teamName, "").Trim().ToLower() + " ii";
+                 }
+                if (youthClass != null)
+                {
+                    return regexYouthFB.Replace(teamName, "").Trim().ToLower() + " u" + youthClass.ToString();
+                }
+                return teamName.Trim().ToLower();
+            }
         }
     }
 }
