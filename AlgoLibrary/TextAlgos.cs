@@ -183,8 +183,16 @@ namespace AlgoLibrary
             Match monthDayTimeMatch = regexMonthDayTime.Match(datestr);
             if (monthDayTimeMatch.Success)
             {
-                DateTime datetime = DateTime.ParseExact($"{monthDayTimeMatch.Groups[1]} {monthDayTimeMatch.Groups[2]}", "MMMM d", System.Globalization.CultureInfo.InvariantCulture);
-                return new DateOnly(DateTime.Now.Year, datetime.Month, datetime.Day);
+                try
+                {
+                    DateTime datetime = DateTime.ParseExact($"{monthDayTimeMatch.Groups[1]} {monthDayTimeMatch.Groups[2]}", "MMMM d", System.Globalization.CultureInfo.InvariantCulture);
+                    return new DateOnly(DateTime.Now.Year, datetime.Month, datetime.Day);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"DEBUG: Date format unknown: {datestr} ; returned todays date");
+                    return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                }
             }
 
             DateOnly[] weekDates = new DateOnly[7];
