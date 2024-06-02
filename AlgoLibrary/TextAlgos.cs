@@ -205,18 +205,43 @@ namespace AlgoLibrary
             }
 
             string[] months_nl = { "jan", "feb", "maa", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec" };
+            string[] months_eng = { "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" };
 
             int date_month = today.Month;
             int date_day = today.Day;
 
+            string month_str = "";
+
             string[] datestr_split = datestr.ToLower().Trim('.').Trim().Split(" ");
             if (datestr_split.Length == 2)
             {
-                if (months_nl.Contains(datestr_split[1]))
+                if (int.TryParse(datestr_split[0], out date_day))
                 {
-                    date_month = Array.IndexOf(months_nl, datestr_split[1].ToLower()) + 1;
+                    month_str = datestr_split[1];
                 }
-                int.TryParse(datestr_split[0], out date_day);
+                else if (int.TryParse(datestr_split[1], out date_day))
+                {
+                    month_str = datestr_split[0];
+                }
+
+                if (months_nl.Contains(month_str))
+                {
+                    date_month = Array.IndexOf(months_nl, month_str.ToLower()) + 1; // date_month can be -1 here
+                }
+                else if (months_eng.Contains(month_str))
+                {
+                    date_month = Array.IndexOf(months_eng, month_str.ToLower()) + 1; // date_month can be -1 here
+                }
+                try
+                {
+                    DateOnly result_date = new DateOnly(today.Year, date_month, date_day);
+                    if (result_date != today) { return result_date; };
+                }
+                catch (System.ArgumentOutOfRangeException) // invalid day and/or month
+                {
+                    Console.WriteLine($"DEBUG: Date format unknown: {datestr} ; returned todays date");
+                    return new DateOnly(today.Year, today.Month, today.Day);
+                }
             }
 
             switch (datestr)
@@ -293,7 +318,7 @@ namespace AlgoLibrary
                 else if (reYouthMatch.Groups[1].Success || reYouthMatch.Groups[3].Success)
                 {
                     return regexYouthFB.Replace(teamName, "").Trim().ToLower() + " ii";
-                 }
+                }
                 if (youthClass != null)
                 {
                     return regexYouthFB.Replace(teamName, "").Trim().ToLower() + " u" + youthClass.ToString();
