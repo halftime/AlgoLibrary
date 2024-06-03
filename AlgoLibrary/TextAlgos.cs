@@ -284,7 +284,7 @@ namespace AlgoLibrary
 
         public static class TeamNames
         {
-            private static Regex regexYouthFB = new Regex(@"^(jong|jeugd|youth)|(?:(?:(?:U|O)+(19|21|23))|(B|reserves))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            private static Regex regexYouthFB = new Regex(@"^(jong|jeugd|youth)|(?:(?:(?:U|O)+(19|21|23))|(B|reserves|\[Y\]))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             private static Regex regexWomenFB = new Regex(@"(women|\(D\)|\(W\)|(\[W\]))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             /// <summary>
