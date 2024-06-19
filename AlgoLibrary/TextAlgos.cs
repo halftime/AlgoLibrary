@@ -387,7 +387,12 @@ namespace AlgoLibrary
 { "macedonie", "north macedonia" },
 { "san marino", "san marino" },
 { "kosovo", "kosovo" },
-{ "vaticanstad", "vatican city" }
+{ "vaticanstad", "vatican city" },
+                    { "argentinie", "argentina"},
+                    { "brazilie", "brazil" },
+                    { "vs", "usa" }
+
+
         };
                 if (countryMapping.TryGetValue(countryNl, out string? countryEn))
                 {
