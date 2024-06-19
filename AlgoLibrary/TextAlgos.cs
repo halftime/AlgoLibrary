@@ -350,7 +350,7 @@ namespace AlgoLibrary
 { "zweden", "sweden" },
 { "zwitserland", "switzerland" },
 { "denemarken", "denmark" },
-{ "tsjechië", "czech republic" },
+{ "tsjechie", "czech republic" },
 { "hongarije", "hungary" },
 { "ijsland", "iceland" },
 { "noorwegen", "norway" },
