@@ -326,5 +326,81 @@ namespace AlgoLibrary
                 return teamName.Trim().ToLower();
             }
         }
+
+        public static class Countries
+        {
+            /// <summary>
+            /// Returns the English country name from dutch,
+            /// Null if not found
+            /// </summary>
+            /// <param name="countryNl">eg: Nederland</param>
+            /// <param name="showFails">show debug message if not found (default false)</param>
+            public static string? DutchToEnglish(string countryNl, bool showFails = false)
+            {
+                Dictionary<string, string> countryMapping = new Dictionary<string, string>{
+            { "nederland", "netherlands" },
+{ "duitsland", "germany" },
+{ "frankrijk", "france" },
+{ "spanje", "spain" },
+{ "italie", "italy" },
+{ "portugal", "portugal" },
+{ "engeland", "england" },
+{ "belgie", "belgium" },
+{ "oostenrijk", "austria" },
+{ "zweden", "sweden" },
+{ "zwitserland", "switzerland" },
+{ "denemarken", "denmark" },
+{ "tsjechië", "czech republic" },
+{ "hongarije", "hungary" },
+{ "ijsland", "iceland" },
+{ "noorwegen", "norway" },
+{ "polen", "poland" },
+{ "rusland", "russia" },
+{ "turkije", "turkey" },
+{ "oekraine", "ukraine" },
+{ "wit rusland", "belarus" },
+{ "bulgarije", "bulgaria" },
+{ "finland", "finland" },
+{ "griekenland", "greece" },
+{ "ierland", "ireland" },
+{ "schotland", "scotland" },
+{ "wales", "wales" },
+{ "slovenie", "slovenia" },
+{ "slowakije", "slovakia" },
+{ "roemenie", "romania" },
+{ "kroatie", "croatia" },
+{ "albanie", "albania" },
+{ "georgie", "georgia" },
+{ "servie", "serbia" },
+{ "andorra", "andorra" },
+{ "bosnie en herzegovina", "bosnia and herzegovina" },
+{ "cyprus", "cyprus" },
+{ "estland", "estonia" },
+{ "letland", "latvia" },
+{ "litouwen", "lithuania" },
+{ "luxemburg", "luxembourg" },
+{ "malta", "malta" },
+{ "monaco", "monaco" },
+{ "montenegro", "montenegro" },
+{ "liechtenstein", "liechtenstein" },
+{ "moldavie", "moldova" },
+{ "macedonie", "north macedonia" },
+{ "san marino", "san marino" },
+{ "kosovo", "kosovo" },
+{ "vaticanstad", "vatican city" }
+        };
+                if (countryMapping.TryGetValue(countryNl, out string? countryEn))
+                {
+                    return countryEn;
+                }
+                if (showFails)
+                {
+                    Console.WriteLine($"DEBUG: NL Country mapping not found for {countryNl}");
+                }
+
+                return null;
+            }
+
+        }
     }
 }
