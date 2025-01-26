@@ -167,7 +167,8 @@ namespace AlgoLibrary
                         daysToAdd = (7 - (int)currentDayOfWeek + 7) % 7;
                         break;
                 }
-                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(daysToAdd);
+
+                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + daysToAdd);
             }
 
             if (datestr.StartsWith("vandaag") || datestr.StartsWith("today"))
@@ -177,7 +178,7 @@ namespace AlgoLibrary
 
             if (datestr.StartsWith("morgen") || datestr.StartsWith("tomorrow"))
             {
-                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1);
+                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1);
             }
 
             Match monthDayTimeMatch = regexMonthDayTime.Match(datestr);
