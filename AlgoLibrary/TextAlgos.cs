@@ -94,7 +94,7 @@ namespace AlgoLibrary
 
         private static Regex regexMonthDayTime = new Regex(@"^([A-z]+) (\d{1,2}) *\d{1,2}:\d\d$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches april 30 19:00
 
-        private static Regex regexDayNLTime = new Regex(@"^(ma|di|wo|do|vr|za|zo|mo|tu|we|th|fr|sa|su).{0,1}\d{2}:\d\d$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches ma 19:00
+        private static Regex regexDayNLTime = new Regex(@"^(ma|di|wo|do|vr|za|zo|mo|tu|we|th|fr|sa|su|mon|tues|wed|thu|fri|sat|sun).{0,1}\d{2}:\d\d$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches ma 19:00
 
         private static Regex regexYYYYMMDD = new Regex(@"^(\d{4}).(\d{1,2}).(\d{1,2})", RegexOptions.Compiled); // matches 2024-04-30T19:00:00Z
 
@@ -139,47 +139,47 @@ namespace AlgoLibrary
                 switch (dayNLTimeMatch.Groups[1].Value.ToLower())
                 {
                     case "ma":
+                    case "mon":
                     case "mo": // monday : DayOfWeek = 1
                         daysToAdd = (1 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "di":
+                    case "tue":
                     case "tu": // tuesday : DayOfWeek = 2
                         daysToAdd = (2 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "wo":
+                    case "wed":
                     case "we": // wednesday : DayOfWeek = 3
                         daysToAdd = (3 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "do":
+                    case "thu":
                     case "th": // thursday : DayOfWeek = 4
                         daysToAdd = (4 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "vr":
+                    case "fri":
                     case "fr": // friday : DayOfWeek = 5
                         daysToAdd = (5 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "za":
+                    case "sat":
                     case "sa": // saturday : DayOfWeek = 6
                         daysToAdd = (6 - (int)currentDayOfWeek + 7) % 7;
                         break;
                     case "zo":
+                    case "sun":
                     case "su": // sunday : DayOfWeek = 0
                         daysToAdd = (7 - (int)currentDayOfWeek + 7) % 7;
                         break;
                 }
 
-                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + daysToAdd);
+                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(daysToAdd);
             }
 
-            if (datestr.StartsWith("vandaag") || datestr.StartsWith("today"))
-            {
-                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            }
-
-            if (datestr.StartsWith("morgen") || datestr.StartsWith("tomorrow"))
-            {
-                return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1);
-            }
+            if (datestr.StartsWith("vandaag") || datestr.StartsWith("today")) return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            if (datestr.StartsWith("morgen") || datestr.StartsWith("tomorrow")) return new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1);
 
             Match monthDayTimeMatch = regexMonthDayTime.Match(datestr);
             if (monthDayTimeMatch.Success)
