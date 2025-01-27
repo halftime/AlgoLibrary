@@ -96,7 +96,9 @@ namespace AlgoLibrary
 
         private static Regex regexDayNLTime = new Regex(@"^(ma|di|wo|do|vr|za|zo|mo|tu|we|th|fr|sa|su|mon|tues|wed|thu|fri|sat|sun).{0,1}\d{2}:\d\d$", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches ma 19:00
 
-        private static Regex regexYYYYMMDD = new Regex(@"^(\d{4}).(\d{1,2}).(\d{1,2})", RegexOptions.Compiled); // matches 2024-04-30T19:00:00Z
+        private static Regex regexYYYYMMDD = new Regex(@"^(\d{4}).(\d{1,2}).(\d{1,2})", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches 2024-04-30T19:00:00Z
+
+        private static Regex regexDD_MMM = new Regex(@"^(\d{1,2}) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", RegexOptions.IgnoreCase | RegexOptions.Compiled); // matches 30 apr
 
         /// <summary>
         /// Returns a DateOnly object from a string
@@ -108,6 +110,9 @@ namespace AlgoLibrary
         public static DateOnly GetDateFromStr_DefaultToday(string date_str)
         {
             string datestr = date_str.ToLower();
+
+            Match ddMMMMatch = regexDD_MMM.Match(datestr);
+            if (ddMMMMatch.Success) return new DateOnly (DateTime.Now.Year, DateTime.ParseExact($"{ddMMMMatch.Groups[2]} {ddMMMMatch.Groups[1]}", "MMM d", System.Globalization.CultureInfo.InvariantCulture).Month, int.Parse(ddMMMMatch.Groups[1].Value));
 
             Match dateSpaceTimeMatch = regexDateSpaceTime.Match(datestr);
             if (dateSpaceTimeMatch.Success)
