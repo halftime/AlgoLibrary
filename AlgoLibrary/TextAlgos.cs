@@ -109,7 +109,7 @@ namespace AlgoLibrary
         /// <returns></returns>
         public static DateOnly GetDateFromStr_DefaultToday(string date_str)
         {
-            string datestr = date_str.ToLower();
+            string datestr = date_str.ToLower().Trim();
 
             Match ddMMMMatch = regexDD_MMM.Match(datestr);
             if (ddMMMMatch.Success) return new DateOnly (DateTime.Now.Year, DateTime.ParseExact($"{ddMMMMatch.Groups[2]} {ddMMMMatch.Groups[1]}", "MMM d", System.Globalization.CultureInfo.InvariantCulture).Month, int.Parse(ddMMMMatch.Groups[1].Value));
